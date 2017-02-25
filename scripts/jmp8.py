@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 import numpy as np
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics.pairwise import paired_cosine_distances
 from sklearn.utils.extmath import randomized_svd
 from svmloader import *
+from misc import *
 
 
 USE_SVD = False
@@ -11,28 +14,6 @@ if not USE_SVD:
     from scipy.sparse import vstack
 else:
     vstack = np.vstack
-
-
-def load_data(filename):
-    pairs = []
-    with open(filename, 'r', encoding='utf8') as fp:
-        for line in fp:
-            w1, w2 = line.strip().split('\t')
-            pairs.append((w1, w2))
-    return pairs
-
-def load_keys(filename):
-    with open(filename, 'r', encoding='utf8') as fp:
-        keys = [float(line.strip()) for line in fp]
-    return np.array(keys)
-
-def load_words(filename):
-    with open(filename, 'r', encoding='utf8') as fp:
-        return [line.strip() for line in fp]
-
-def load_matrix(filename):
-    X, y = load_svmfile(filename, dtype='f')
-    return X
 
 
 # helpers functions with CSR matrix

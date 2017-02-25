@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from collections import defaultdict, Counter
 from itertools import islice
 from time import time
@@ -9,7 +11,7 @@ from datasets import load
 MAXSAMPLES = 300000
 MAXFEATURES = 100000
 K = 4           # window size
-SUFFIX = ''     # to distinct between some variants
+SUFFIX = ''     # to distinguish between some variants
 
 
 
