@@ -31,11 +31,11 @@ def ppmi(m):
     sj = m.sum(0).A1
     si = m.sum(1).A1
 
-    m.data *= m.nnz
+    m.data *= m.sum()
     div_cols(m, sj)
     div_rows(m, si)
 
-    m.data = np.log(m.data)
+    np.log(m.data, m.data)
 
     m.data[m.data<0] = 0
     m.eliminate_zeros()
