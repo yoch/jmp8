@@ -48,13 +48,6 @@ if __name__ == '__main__':
     NFEATURES = min(MAXFEATURES, len(retained_words))
     NSAMPLES = min(MAXSAMPLES, len(retained_words))
 
-    with chrono('save words'):
-        fp = open(key + SUFFIX + '.words', 'w', encoding='utf8')
-        for w in retained_words[:NSAMPLES]:
-            fp.write(w)
-            fp.write('\n')
-        fp.close()
-
     with chrono('prepare matrix'):
         dct = defaultdict(float)
         for sent in all_sents:
@@ -79,17 +72,30 @@ if __name__ == '__main__':
         M = csr_matrix((data, (I,J)), dtype='f')
         print(' matrix shape: ', M.shape, 'nnz:', M.nnz)
 
+    skip = set()
+
     with chrono('save matrix'):
         fp = open(key + SUFFIX + '.svm', 'w', encoding='utf8')
         data, indices, indptr = M.data, M.indices, M.indptr
         for i in range(len(indptr)-1):
             start, stop = indptr[i:i+2]
             if start == stop:
-                print('Warning: blank line at %d' % i, file=sys.stderr)
+                print('Warning: blank line at %d' % i)
+                skip.add(i)
+                continue
             line = ' '.join('%d:%g' % (indices[j], data[j])
                             for j in range(start, stop))
             fp.write(str(i))
             fp.write(' ')
             fp.write(line)
+            fp.write('\n')
+        fp.close()
+
+    with chrono('save words'):
+        fp = open(key + SUFFIX + '.words', 'w', encoding='utf8')
+        for i, w in enumerate(islice(retained_words, NSAMPLES)):
+            if i in skip:
+                continue
+            fp.write(w)
             fp.write('\n')
         fp.close()
