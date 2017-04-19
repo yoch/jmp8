@@ -80,7 +80,7 @@ if __name__ == '__main__':
         for i in range(len(indptr)-1):
             start, stop = indptr[i:i+2]
             if start == stop:
-                print('Warning: blank line at %d' % i)
+                print('Warning: blank line at %d (%s)' % (i, retained_words[i]))
                 skip.add(i)
                 continue
             line = ' '.join('%d:%g' % (indices[j], data[j])

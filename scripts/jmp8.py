@@ -98,13 +98,15 @@ if __name__ == '__main__':
     print(X.shape, X.nnz, file=sys.stderr)
 
     if USE_SVD:
-        X, _, _ = randomized_svd(X, n_components=500, n_iter=4, random_state=None)
+        X, _, _ = randomized_svd(X, n_components=500, n_iter=5, random_state=None)
         print(X.shape, file=sys.stderr)
 
     # load words
-    y = load_words(fwords)
+    words = load_words(fwords)
     # make word to index dict
-    inv = {w: i for i, w in enumerate(y)}
+    inv = {w: i for i, w in enumerate(words)}
+
+    assert len(words) == X.shape[0]
 
     # load test set
     wpairs = load_data(fdata)
