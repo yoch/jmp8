@@ -85,7 +85,7 @@ if __name__ == '__main__':
         for i in range(len(indptr)-1):
             start, stop = indptr[i:i+2]
             if start == stop:
-                continue
+                print('Warning: blank line at %d' % i, file=sys.stderr)
             line = ' '.join('%d:%g' % (indices[j], data[j])
                             for j in range(start, stop))
             fp.write(str(i))
