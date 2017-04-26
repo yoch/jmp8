@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict, Counter
-from itertools import islice
 from time import time
 from contextlib import contextmanager
+from itertools import chain, islice
 from scipy.sparse import csr_matrix
 from datasets import load
 
 
 MAXSAMPLES = 300000
 MAXFEATURES = 100000
-K = 4           # window size
-SUFFIX = ''     # to distinguish between some variants
+K = 4               # window size
+SUFFIX = '-w%d' % K   # to distinguish between some variants
 
 
 
@@ -22,8 +22,8 @@ def chrono(*args, **kw):
     yield
     print(' ... elapsed %.3fs' % (time() - t1))
 
-def ngrams(seq, n):
-    return zip(*[islice(seq, k, None) for k in range(n)])
+def windows(seq, n):
+    return [seq[i:i+n+1] for i in range(len(seq)-1)]
 
 if __name__ == '__main__':
     import sys
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     with chrono('prepare matrix'):
         dct = defaultdict(float)
         for sent in all_sents:
-            for x, *window in ngrams(sent, K):
+            for x, *window in windows(sent, K):
                 i = retained.get(x)
                 if i is None:
                     continue
